@@ -5,4 +5,4 @@ var testcontent=fs.readFileSync(testfile,"utf8");
 var json=xml2standoff(testcontent);
 var tags=json.tags;
 var text=json.text.replace("`","\\`");
-console.log("module.exports={text:`"+text+"`,tag:[\n"+tags.map(function(tag){return JSON.stringify(tag)}).join(",\n")+"\n]};");
+console.log("module.exports={header:{},text:`"+text+"`\n,tag:[\n"+tags.map(function(tag){return JSON.stringify(tag)}).join(",\n")+"\n]};");

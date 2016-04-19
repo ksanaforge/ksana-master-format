@@ -26,7 +26,7 @@ var xml2standoff=function(content){
 		context.tags.push(formatTag(T[1],T[2],len));
 	}
 	var ontext=function(text){
-		context.text+=text;
+		context.text+=text.replace(/\r\n/g,"\n");
 	}
 
 	var parser=Sax.parser(true);
