@@ -23,4 +23,11 @@ describe('conversion', function() {
 			if (t1[i]!==t2[i]) console.log("out:",t1[i],"\noriginal",t2[i]);
 		}
 	});
+
 });
+
+describe('cbeta',function(){
+	it("aa",function(){
+
+	})
+})

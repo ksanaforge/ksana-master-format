@@ -1,5 +1,14 @@
 var Sax=require("sax");
+/** 
+	[offset_from_begining_of_text, len|-pos_of_match_tag , element, attributes ]
 
+	element="/xxx"  ; closing tag
+	element="xxx/"  ; null tag
+
+	if len==0 && element[0]=="<" , output as it is
+	if len>0 , a overlappable tag 
+	if len<0 , xml tag
+*/
 var xml2standoff=function(content){
 	var tagstack=[],context={tags:[],text:""};
 
@@ -13,19 +22,19 @@ var xml2standoff=function(content){
 	}
 	
 	var formatTag=function(tag,start){
-		var arr=[start,tag.name+(tag.isSelfClosing?"/":"")];
+		var arr=[start,0,tag.name+(tag.isSelfClosing?"/":"")];
 
 		if (Object.keys(tag.attributes).length) arr.push(tag.attributes);
 		return arr;
 	}
 	var onprocessinginstruction=function(obj) {
 		var offset=context.text.length;
-		context.tags.push([offset,"<?"+obj.name+" "+obj.body+"?>"]);
+		context.tags.push([offset,0,"<?"+obj.name+" "+obj.body+"?>"]);
 	}
-	
+
 	var oncomment=function(comment) {
 		var offset=context.text.length;
-		context.tags.push([offset,"<!--"+comment+"-->"]);
+		context.tags.push([offset,0,"<!--"+comment+"-->"]);
 	}
 
 	var onclosetag=function(name){
@@ -37,8 +46,8 @@ var xml2standoff=function(content){
 		
 		
 		if (!T[2]){
-			context.tags[T[1]][3]=context.tags.length;//resolve end tag pos	
-			context.tags.push([offset,"/"+T[0],T[1]]);
+			context.tags[T[1]][1]=-context.tags.length;//resolve end tag pos
+			context.tags.push([offset,-T[1],"/"+T[0]]);
 		} 
 		//context.tags[T[1]][1]=offset;//resolve end position
 	}

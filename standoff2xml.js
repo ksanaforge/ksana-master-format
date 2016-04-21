@@ -5,7 +5,7 @@ var standoff2xml=function(content){
 
 	while (i<=len) {
 		while (tag && i===tag[0]) {
-			var tagname=tag[1], nulltag=false;
+			var tagname=tag[2], nulltag=false;
 			if (tagname[0]=="<") {//as it is, comment or directive
 				out+=tagname;
 			} else {
@@ -15,7 +15,7 @@ var standoff2xml=function(content){
 				}
 
 				out+="<"+tagname;
-				var attrs=tag[2];
+				var attrs=tag[3];
 				if (attrs) {
 					for (var attr in attrs) {
 						out+=" "+attr+'="'+attrs[attr]+'"';
