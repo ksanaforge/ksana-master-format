@@ -1,4 +1,4 @@
-var Sax=require("sax");
+
 /** 
 	[offset_from_begining_of_text, len|-pos_of_match_tag , element, attributes ]
 
@@ -10,6 +10,8 @@ var Sax=require("sax");
 	if len<0 , xml tag
 */
 var xml2standoff=function(content){
+	var sax="sax";
+	var Sax=require(sax);
 	var tagstack=[],context={tags:[],text:""};
 
 	var onopentag=function(e){

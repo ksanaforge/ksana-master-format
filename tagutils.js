@@ -5,9 +5,14 @@ var matchOpenCloseTag=function(tags){
 	var tagstack=[];
 	for (var i=0;i<tags.length;i++) {
 		var tag=tags[i];
-		if (tag[1]>=0) continue;
-
 		var ele=tag[2];
+
+		//not a standoff
+		if (tag[1]>0) continue;
+		//only </body> might point to top of array, but it is not a standoff
+		if (tag[1]==0 && ele[0]!=="/") continue; 
+
+		//negative length, xml tag with tag[1] as index of pair in array
 		if (ele[0]!=="/") {
 			tag[1]=0;
 			tagstack.push(["/"+ele,-i]);

@@ -34,7 +34,7 @@ var layout=function(json, splittag) {
 			var start=text.length;
 
 			r.snippet.forEach(function(t){
-				tags.push([start, t[1]-t[0] ,"source",{s:last+t[0],l:t[1]-t[0]}]); //source position
+				tags.push([start, t[1]-t[0] ,"source",{s:last+t[0]}]); //source position
 				start+=(t[1]-t[0]);
 			});
 
