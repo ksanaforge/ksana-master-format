@@ -2,6 +2,14 @@
  * Standoff Markup notation and operation
  * =========================
  *
+create a markup
+markup with members
+
+attach attribute
+
+return a set of markup 
+
+
  */
 
 {
@@ -14,9 +22,6 @@
     return result;
   }
 
-  function print(factor) {
-  	console.log(factor)
-  }
   function union(r1,r2) {
   	var s=new Set([...r1,...r2]);
   	return s;
@@ -28,13 +33,13 @@
   	return new Set([...r1].filter(x => !r2.has(x)));
   }
 
-  var sets={};
+  // var sets={};
 }
 
 start = Defination*
 
 Defination 
-  = _ name:Name _ "=" _ expr:(Expression/Factor) ";"? _ { sets[name.join("")]=expr; console.log(name.join(""),"=",expr) }
+  = _ name:Name _ "=" _ expr:(Expression/Factor) ";"? _ { options.sets[name.join("")]=expr; }
 
 Expression
   = first:Term rest:(_ ("+" / "^" / "-") _ Term)* {
@@ -60,16 +65,24 @@ Factor
  = Ranges
   / Range
   / EmptyRange 
-  / name:Name {return sets[name.join("")] }  ;
+  / name:Name {return options.sets[name.join("")] }  ;
 
 Ranges
-  = first:Range rest:( _ (Range / EmptyRange) _ ",")* {
-    return union(first,rest) 
+  = first:Range rest:( _ "," _ (Range / EmptyRange))* {
+  	if (rest.length) {
+  		var r=first;
+  		for (var i=0;i<rest.length;i++) {
+  			r=union(r,rest[i][3]);
+  		}
+  		return r;
+  	} else {
+  		return first;
+  	}
   }
 
 Range
   = ( start:[0-9]+ "#" len:[0-9]+ ) { 
-  	var arr=[],l=parseInt(len,10),s=parseInt(start);
+  	var arr=[],l=parseInt(len.join(""),10),s=parseInt(start.join(""),10);
   	for (var i=s;i<s+l;i++) {
   		arr.push(i);
   	}
@@ -81,7 +94,7 @@ Name
   = ([a-z]+[0-9]+)
 
 EmptyRange 
-  = ( start:[0-9]+ ) { return new Set([parseInt(start, 10),0]); }
+  = ( start:[0-9]+ ) { return new Set([parseInt(start.join(""), 10),0]); }
 
 _ "whitespace"
   = [ \t\n\r]*
