@@ -43,7 +43,8 @@ Factor
  =  Range
   / EmptyRange 
   / name:Name ":" value:String { var m={};m[name]=value; return m }
-  / name:Name ":" value:Value { var m={}; m[name]=value;console.log("s",m); return m }
+  / name:Name ":" value:Value { var m={}; m[name]=value; return m }
+  / "@" query:String {return ["@"].concat(options.query(query,options.vars) ) }
   / "@" member:Name {return "@"+member}
   / label:Name
 
