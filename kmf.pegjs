@@ -13,88 +13,87 @@ return a set of markup
  */
 
 {
-  function combine(first, rest, combiners) {
-    var result = first, i;
 
-    for (i = 0; i < rest.length; i++) {
-      result = combiners[rest[i][1]](result, rest[i][3]);
-    }
-    return result;
-  }
-
-  function union(r1,r2) {
-  	var s=new Set([...r1,...r2]);
-  	return s;
-  }
-  function intersection(r1,r2) {
-  	return new Set([...r1].filter(x => r2.has(x)));
-  }
-  function difference(r1,r2){
-  	return new Set([...r1].filter(x => !r2.has(x)));
-  }
-
-  // var sets={};
 }
 
 start = Defination*
 
 Defination 
-  = _ name:Name _ "=" _ expr:(Expression/Factor) ";"? _ { options.sets[name.join("")]=expr; }
+  = Assignment 
 
-Expression
-  = first:Term rest:(_ ("+" / "^" / "-") _ Term)* {
-      return combine(first, rest, {
-        "+": union
-        ,"^": intersection
-        ,"-": difference
-      });
-    }
-
-Term
-  = operator:( ("!" / "@") _ )*  factor:Factor {
-  		if (operator=="!") {
-  			//return [[0,factor[0]],[factor[0]+factor[1],-1] ];
-  			throw "not supported yet"
-  			return factor;
-  		} else {
-  			return factor;
-  		}
-    }
-
-Factor
- = Ranges
-  / Range
-  / EmptyRange 
-  / name:Name {return options.sets[name.join("")] }  ;
-
-Ranges
-  = first:Range rest:( _ "," _ (Range / EmptyRange))* {
-  	if (rest.length) {
-  		var r=first;
-  		for (var i=0;i<rest.length;i++) {
-  			r=union(r,rest[i][3]);
-  		}
-  		return r;
-  	} else {
-  		return first;
-  	}
+Assignment  
+  = _ name:Name _ ":=" _ expr:(Expression) ";"? _ { 
+  	options.vars[name]=options.types.createMarkup(expr); 
   }
 
-Range
-  = ( start:[0-9]+ "#" len:[0-9]+ ) { 
-  	var arr=[],l=parseInt(len.join(""),10),s=parseInt(start.join(""),10);
-  	for (var i=s;i<s+l;i++) {
-  		arr.push(i);
+SetAttribute
+  = _ name:Name "." attr:Name _ ":=" _ expr:(Expression) ";"? _ { 
+  	var m=options.vars[name];
+  	if (!m) m=options.types.createMarkup();
+  	m[attr]=expr;
+  }
+
+Expression
+  = first:Factor rest:(_ "," _ Factor)* {
+  	var r=[];
+  	for (var i in rest) {
+  		r.push(rest[i][3]);
   	}
-  	var s=new Set(arr);
-  	return s;
+  	return [first].concat(r)
+  }
+
+Factor
+ =  Range
+  / EmptyRange 
+  / name:Name ":" value:String { var m={};m[name]=value; return m }
+  / name:Name ":" value:Value { var m={}; m[name]=value;console.log("s",m); return m }
+  / "@" typename:Name {return typename}
+  / label:Name
+
+Range
+  = ( start:[0-9]+ "-" len:[0-9]+ ) { 
+  	var arr=[],l=parseInt(len.join(""),10),s=parseInt(start.join(""),10);
+  	return [s,l];
    }
 
 Name 
-  = ([a-z]+[0-9]+)
+  = (n:[a-z]+ n2:[0-9]*) {return n.join("")+n2.join("")}
 
+Value
+  = chars:([0-9\u003B-\u00FF\u3400-\u9FFF\uD800-\uDCFF]+) {return chars.join("")}
+
+String
+  = quotation_mark chars:char* quotation_mark { return chars.join(""); }
+
+Object
+  = "{" chars:char* "}" { return chars.join(""); }
+
+char
+  = unescaped
+  / escape
+    sequence:(
+      '"'
+      / "\\"
+      / "/"
+      / "b" { return "\b"; }
+      / "f" { return "\f"; }
+      / "n" { return "\n"; }
+      / "r" { return "\r"; }
+      / "t" { return "\t"; }
+      / "u" digits:$(HEXDIG HEXDIG HEXDIG HEXDIG) {
+          return String.fromCharCode(parseInt(digits, 16));
+        }
+    )
+    { return sequence; }
+
+escape         = "\\"
+quotation_mark = '"'
+
+unescaped      = [^\0-\x1F\x22\x5C}]
+DIGIT  = [0-9]
+HEXDIG = [0-9a-f]i
 EmptyRange 
-  = ( start:[0-9]+ ) { return new Set([parseInt(start.join(""), 10),0]); }
+  = ( start:[0-9]+ ) { return [parseInt(start.join(""), 10),0]; }
 
 _ "whitespace"
   = [ \t\n\r]*

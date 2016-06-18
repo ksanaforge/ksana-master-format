@@ -1,4 +1,2 @@
-a1=7#2,11#3
-a2=8#3
-a3=a1^a2
-a4=a1+a2+a3
+a1:=@note,7-11,author:hsieh,date:now
+a2:=@pb,7-2,11-3,5,author:yap,date:now,xyz:":: ,, ::",written

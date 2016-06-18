@@ -4,6 +4,7 @@ var content=fs.readFileSync("kmf.pegjs","utf8");
 var parser = peg.buildParser(content);
 var text=fs.readFileSync("sample.txt","utf8");
 var markups=fs.readFileSync("sample.mrk","utf8");
-var sets={};
-var m=parser.parse(markups,{sets});
-console.log(sets)
+var types=require("./types");
+var vars={};
+var m=parser.parse(markups,{types, vars});
+console.log(JSON.stringify(vars,"",""));
