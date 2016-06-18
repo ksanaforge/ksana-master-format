@@ -1,5 +1,11 @@
 a1:=7-11,type:note,author:hsieh,date:now
 a2:=10-5,author:yap
-a3:=7-2,12-3,type:pb,author:yap,date:now,xyz:":: ,, ::",written,@a1
+a3:=7-2,12-3,type:note,author:yap,date:now,xyz:":: ,, ::",written,@a1
+pb1:=type:pb
+pb2:=type:pb,ed:vri
+pb3:=type:pb
 a3+=@a2
-out:=@"10&author:yap"
+
+query_by_offset_author:=@"10,author:yap"
+out1:=@"type:pb"
+out:=@"type:pb,ed:vri"

@@ -55,7 +55,7 @@ Range
    }
 
 Name 
-  = (n:[a-z]+ n2:[0-9]*) {return n.join("")+n2.join("")}
+  = (n:[_a-z0-9]+) {return n.join("")}
 
 Value
   = chars:([0-9\u003B-\u00FF\u3400-\u9FFF\uD800-\uDCFF]+) {return chars.join("")}

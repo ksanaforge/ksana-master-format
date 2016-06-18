@@ -25,7 +25,7 @@ var filterByKey=function(key,value,mid,vars) {
 }
 
 var query=function(Q,vars) {
-	var querys=Q.split("&");
+	var querys=Q.split(",");
 	var out=Object.keys(vars);
 	for (var i=0;i<querys.length;i++) {
 		var q=querys[i];
@@ -34,6 +34,7 @@ var query=function(Q,vars) {
 		} else {
 			var m=q.match(/([a-z0-9]+):(.*)/);
 			if (m) { //key:value
+				console.log(m[1],m[2],out)
 				out=filterByKey(m[1],m[2],out,vars);
 			} else { //label
 				out=filterByKey(m[1],true,out,vars);
