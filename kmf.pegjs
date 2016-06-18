@@ -19,20 +19,17 @@ return a set of markup
 start = Defination*
 
 Defination 
-  = Assignment 
+  = Assignment / Modification
 
 Assignment  
   = _ name:Name _ ":=" _ expr:(Expression) ";"? _ { 
   	options.vars[name]=options.types.createMarkup(expr); 
   }
 
-SetAttribute
-  = _ name:Name "." attr:Name _ ":=" _ expr:(Expression) ";"? _ { 
-  	var m=options.vars[name];
-  	if (!m) m=options.types.createMarkup();
-  	m[attr]=expr;
+Modification
+  = _ name:Name _ "+=" _ expr:(Expression) ";"? _ { 
+  	options.vars[name]=options.types.createMarkup(expr,options.vars[name]); 
   }
-
 Expression
   = first:Factor rest:(_ "," _ Factor)* {
   	var r=[];

@@ -1,8 +1,12 @@
-var createMarkup=function(init){
+var createMarkup=function(init,existing){
 	var m={
 		labels:{},
 		ranges:[],  
 		members:[]
+	}
+
+	if (existing) {
+		m=JSON.parse(JSON.stringify(existing));
 	}
 
 	for (var i in init){
@@ -18,8 +22,7 @@ var createMarkup=function(init){
 		} else if (typeof (init[i]==="object")){
 			for (var k in init[i]) {
 				m.labels[k]=init[i][k];
-			}
-			
+			}		
 		}
 	}
 	return m;
