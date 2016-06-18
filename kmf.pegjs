@@ -47,7 +47,7 @@ Factor
   / EmptyRange 
   / name:Name ":" value:String { var m={};m[name]=value; return m }
   / name:Name ":" value:Value { var m={}; m[name]=value;console.log("s",m); return m }
-  / "@" typename:Name {return typename}
+  / "@" member:Name {return "@"+member}
   / label:Name
 
 Range

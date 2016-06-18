@@ -1,2 +1,3 @@
-a1:=@note,7-11,author:hsieh,date:now
-a2:=@pb,7-2,11-3,5,author:yap,date:now,xyz:":: ,, ::",written
+a1:=7-11,type:note,author:hsieh,date:now
+a2:=10-15
+a3:=7-2,11-3,5,type:pb,author:yap,date:now,xyz:":: ,, ::",written,@a1,@a2
