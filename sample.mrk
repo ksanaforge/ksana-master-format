@@ -1,11 +1,13 @@
 a1:=7-11,type:note,author:hsieh,date:now
 a2:=10-5,author:yap
 a3:=7-2,12-3,type:note,author:yap,date:now,xyz:":: ,, ::",written,@a1
-pb1:=type:pb
+pb1:=type:pb,@a1
 pb2:=type:pb,ed:vri
-pb3:=type:pb
+pb3:=type:pb,@a2
 a3+=@a2
 
 query_by_offset_author:=@"10,author:yap"
-out1:=@"type:pb"
-out:=@"type:pb,ed:vri"
+type_of:=@"type:pb"
+pb_ed_vri:=@"type:pb,ed:vri"
+with_member:=@"@a1"
+out:=@"1"

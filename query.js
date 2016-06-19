@@ -1,4 +1,5 @@
 var offsetInMarkup=function(offset,markup){
+	if (!markup.ranges.length) return false;
 	for (var i=0;i<markup.ranges.length;i++) {
 		var r=markup.ranges[i];
 		if (offset<r[0]||offset>r[0]+r[1]) return false;
@@ -15,10 +16,21 @@ var filterByRange=function(offset,mid,vars) {
 	}
 	return out;
 }
+var filterByMember=function(member,mid,vars) {
+	var out=[];
+	for (var i=0;i<mid.length;i++) {		
+
+		if (vars[mid[i]].members[member]) {
+			out.push(mid[i]);
+		}
+	}
+
+	return out;	
+}
+
 var filterByKey=function(key,value,mid,vars) {
 	var out=[];
-	for (var i=0;i<mid.length;i++) {
-		
+	for (var i=0;i<mid.length;i++) {		
 		if (keyInMarkup(key,value,vars[mid[i]])) out.push(mid[i]);
 	}
 	return out;	
@@ -34,10 +46,13 @@ var query=function(Q,vars) {
 		} else {
 			var m=q.match(/([a-z0-9]+):(.*)/);
 			if (m) { //key:value
-				console.log(m[1],m[2],out)
 				out=filterByKey(m[1],m[2],out,vars);
 			} else { //label
-				out=filterByKey(m[1],true,out,vars);
+				if (q[0]==="@") {
+					out=filterByMember(q.substr(1),out,vars);
+				} else {
+					out=filterByKey(q,true,out,vars);	
+				}
 			}
 		}
 	}
