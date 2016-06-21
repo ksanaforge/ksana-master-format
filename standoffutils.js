@@ -38,7 +38,11 @@ var layout=function(json, splittag) {
 				start+=(t[1]-t[0]);
 			});
 
-			text+=r.text+"\n\n";
+			text+=r.text;
+
+			tags.push([text.length,2,"p"]); //just to protect from modification
+			text+="\n\n";
+
 			if (tag) last=tag[0];
 		}
 		i++;
